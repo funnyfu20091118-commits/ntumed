@@ -1,2 +1,5 @@
 mntdata/
 mntdata
+./mntdata
+./mntdata/
+__pycache__/
