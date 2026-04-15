@@ -67,13 +67,22 @@ class GaussianDiffusion:
         sqrt_one_minus = self.sqrt_one_minus_alphas_cumprod[t].view(-1, 1, 1, 1)
         return (x_t - sqrt_one_minus * eps) / sqrt_alpha
 
+    def _apply_cfg(self, model, x_t, t, text_emb, guidance_scale, **kwargs):
+        """Apply classifier-free guidance to noise prediction."""
+        if guidance_scale == 1.0:
+            return model(x_t, t, text_emb, **kwargs)
+        null_text = torch.zeros_like(text_emb)
+        eps_uncond = model(x_t, t, null_text, **kwargs)
+        eps_cond = model(x_t, t, text_emb, **kwargs)
+        return eps_uncond + guidance_scale * (eps_cond - eps_uncond)
+
     @torch.no_grad()
-    def ddpm_sample_step(self, model, x_t, t_idx, text_emb):
-        """Single DDPM reverse step."""
+    def ddpm_sample_step(self, model, x_t, t_idx, text_emb, guidance_scale=1.0, **kwargs):
+        """Single DDPM reverse step with optional CFG."""
         B = x_t.shape[0]
         t = torch.full((B,), t_idx, device=x_t.device, dtype=torch.long)
 
-        eps_pred = model(x_t, t, text_emb)
+        eps_pred = self._apply_cfg(model, x_t, t, text_emb, guidance_scale, **kwargs)
 
         # Posterior mean
         mean = (
@@ -88,16 +97,17 @@ class GaussianDiffusion:
         return mean
 
     @torch.no_grad()
-    def ddpm_sample(self, model, shape, text_emb):
-        """Full DDPM reverse sampling."""
+    def ddpm_sample(self, model, shape, text_emb, guidance_scale=1.0, **kwargs):
+        """Full DDPM reverse sampling with optional CFG."""
         x = torch.randn(shape, device=self.device)
         for t in reversed(range(self.num_timesteps)):
-            x = self.ddpm_sample_step(model, x, t, text_emb)
+            x = self.ddpm_sample_step(model, x, t, text_emb, guidance_scale, **kwargs)
         return x
 
     @torch.no_grad()
-    def ddim_sample(self, model, shape, text_emb, ddim_steps: int = 50, eta: float = 0.0):
-        """DDIM deterministic or stochastic sampling."""
+    def ddim_sample(self, model, shape, text_emb, ddim_steps: int = 50,
+                    eta: float = 0.0, guidance_scale: float = 1.0, **kwargs):
+        """DDIM deterministic or stochastic sampling with optional CFG."""
         # Create sub-sequence of timesteps
         step_size = self.num_timesteps // ddim_steps
         timesteps = list(range(0, self.num_timesteps, step_size))
@@ -112,7 +122,7 @@ class GaussianDiffusion:
             B = x.shape[0]
             t = torch.full((B,), t_cur, device=x.device, dtype=torch.long)
 
-            eps_pred = model(x, t, text_emb)
+            eps_pred = self._apply_cfg(model, x, t, text_emb, guidance_scale, **kwargs)
 
             # Predicted x0
             alpha_cur = self.alphas_cumprod[t_cur]

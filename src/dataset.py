@@ -43,18 +43,25 @@ class MIMICCXRDataset(Dataset):
         # Report text
         report = str(row["report_text"])
 
-        # CheXpert labels (for evaluation)
+        # CheXpert labels (for evaluation / conditioning)
         labels = []
+        label_mask = []
         for col in self.LABEL_COLS:
             val = row.get(col, float("nan"))
             if pd.isna(val):
                 labels.append(0.0)
+                label_mask.append(0.0)
+            elif val == -1.0:
+                # Uncertain → ignore (mask=0); treat as negative for label value
+                labels.append(0.0)
+                label_mask.append(0.0)
             else:
-                # Map: 1.0 → positive, -1.0 (uncertain) → positive, 0.0 → negative
-                labels.append(1.0 if val == 1.0 or val == -1.0 else 0.0)
+                labels.append(1.0 if val == 1.0 else 0.0)
+                label_mask.append(1.0)
         labels = torch.tensor(labels, dtype=torch.float32)
+        label_mask = torch.tensor(label_mask, dtype=torch.float32)
 
-        return img, report, labels
+        return img, report, labels, label_mask
 
 
 class CLIPDataset(Dataset):

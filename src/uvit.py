@@ -113,6 +113,22 @@ class TextProjection(nn.Module):
         return self.norm(self.proj(x))
 
 
+class LabelProjection(nn.Module):
+    """Project CheXpert disease labels (14-d) to a conditioning token."""
+
+    def __init__(self, num_labels: int = 14, dim: int = 512):
+        super().__init__()
+        self.proj = nn.Sequential(
+            nn.Linear(num_labels, dim),
+            nn.SiLU(),
+            nn.Linear(dim, dim),
+            nn.LayerNorm(dim),
+        )
+
+    def forward(self, labels: torch.Tensor) -> torch.Tensor:
+        return self.proj(labels)
+
+
 class UViT(nn.Module):
     """
     U-ViT for conditional denoising in latent diffusion.
@@ -136,6 +152,7 @@ class UViT(nn.Module):
         heads: int = 8,
         mlp_ratio: float = 4.0,
         text_embed_dim: int = 512,
+        num_labels: int = 14,
         dropout: float = 0.0,
     ):
         super().__init__()
@@ -147,9 +164,10 @@ class UViT(nn.Module):
         self.patch_embed = PatchEmbed(latent_size, patch_size, latent_channels, dim)
         self.time_embed = TimestepEmbedding(dim)
         self.text_proj = TextProjection(text_embed_dim, dim)
+        self.label_proj = LabelProjection(num_labels, dim)
 
-        # Total token count: 1 (time) + num_patches (image) + 1 (text CLS)
-        total_tokens = 1 + num_patches + 1
+        # Total token count: 1 (time) + num_patches (image) + 1 (text) + 1 (label)
+        total_tokens = 1 + num_patches + 1 + 1
         self.pos_embed = nn.Parameter(torch.zeros(1, total_tokens, dim))
         nn.init.trunc_normal_(self.pos_embed, std=0.02)
 
@@ -190,7 +208,7 @@ class UViT(nn.Module):
         self.apply(_init)
 
     def forward(self, z_t: torch.Tensor, t: torch.Tensor,
-                text_emb: torch.Tensor) -> torch.Tensor:
+                text_emb: torch.Tensor, labels: torch.Tensor = None) -> torch.Tensor:
         B = z_t.shape[0]
 
         # Patch embed noisy latent
@@ -202,8 +220,14 @@ class UViT(nn.Module):
         # Text token (global CLS embedding from CLIP)
         text_token = self.text_proj(text_emb).unsqueeze(1)  # (B, 1, dim)
 
-        # Concatenate: [time, image_patches, text]
-        tokens = torch.cat([time_token, img_tokens, text_token], dim=1)  # (B, 1+N+1, dim)
+        # Label token (structured disease labels)
+        if labels is not None:
+            label_token = self.label_proj(labels).unsqueeze(1)  # (B, 1, dim)
+        else:
+            label_token = torch.zeros(B, 1, self.dim, device=z_t.device)
+
+        # Concatenate: [time, image_patches, text, label]
+        tokens = torch.cat([time_token, img_tokens, text_token, label_token], dim=1)
 
         # Add positional embedding
         tokens = tokens + self.pos_embed[:, :tokens.shape[1], :]

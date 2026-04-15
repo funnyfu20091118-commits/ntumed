@@ -13,7 +13,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, WeightedRandomSampler
 from torchvision.utils import save_image
 from tqdm import tqdm
 
@@ -86,9 +86,12 @@ def generate_samples(uvit, vae, diffusion, clip_model, tokenizer, cfg,
     shape = (B, cfg.latent_channels, cfg.latent_size, cfg.latent_size)
 
     if cfg.use_ddim:
-        latents = diffusion.ddim_sample(uvit, shape, text_emb, cfg.ddim_sampling_steps)
+        latents = diffusion.ddim_sample(uvit, shape, text_emb,
+                                        ddim_steps=cfg.ddim_sampling_steps,
+                                        guidance_scale=cfg.guidance_scale)
     else:
-        latents = diffusion.ddpm_sample(uvit, shape, text_emb)
+        latents = diffusion.ddpm_sample(uvit, shape, text_emb,
+                                        guidance_scale=cfg.guidance_scale)
 
     # Decode latents → images
     # SD VAE expects latents scaled by 0.18215
@@ -127,6 +130,7 @@ def train_uvit(cfg: Config):
         heads=cfg.uvit_heads,
         mlp_ratio=cfg.uvit_mlp_ratio,
         text_embed_dim=cfg.text_embed_dim,
+        num_labels=cfg.num_labels,
     ).to(device)
 
     num_params = sum(p.numel() for p in uvit.parameters()) / 1e6
@@ -135,8 +139,20 @@ def train_uvit(cfg: Config):
     # ── Dataset ──
     manifest_path = os.path.join(cfg.cache_dir, "manifest.csv")
     train_ds = MIMICCXRDataset(manifest_path, split="train", image_size=cfg.image_size)
+
+    # Weighted sampling: upweight samples with positive disease labels
+    import pandas as pd
+    import numpy as np
+    label_matrix = train_ds.df[MIMICCXRDataset.LABEL_COLS].fillna(0).values
+    pos_count = label_matrix.clip(0, 1).sum(axis=1)  # count positive labels per sample
+    sample_weights = 1.0 + pos_count
+    sampler = WeightedRandomSampler(
+        weights=sample_weights,
+        num_samples=len(sample_weights),
+        replacement=True
+    )
     train_loader = DataLoader(
-        train_ds, batch_size=cfg.train_batch_size, shuffle=True,
+        train_ds, batch_size=cfg.train_batch_size, sampler=sampler,
         num_workers=cfg.num_workers, pin_memory=True, drop_last=True
     )
     print(f"Training samples: {len(train_ds)}")
@@ -169,13 +185,32 @@ def train_uvit(cfg: Config):
     if os.path.exists(ckpt_path):
         print(f"Resuming from {ckpt_path}")
         ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=True)
-        uvit.load_state_dict(ckpt["model"])
-        optimizer.load_state_dict(ckpt["optimizer"])
-        scheduler.load_state_dict(ckpt["scheduler"])
-        start_epoch = ckpt["epoch"] + 1
-        if "ema" in ckpt:
-            ema.load_state_dict(ckpt["ema"])
-        print(f"  Resumed at epoch {start_epoch}")
+        # Filter out keys with shape mismatches
+        model_sd = uvit.state_dict()
+        compat_sd = {}
+        skipped = []
+        for k, v in ckpt["model"].items():
+            if k in model_sd and v.shape != model_sd[k].shape:
+                skipped.append(k)
+            else:
+                compat_sd[k] = v
+        if skipped:
+            print(f"  Skipping shape-mismatched keys: {skipped}")
+        missing, unexpected = uvit.load_state_dict(compat_sd, strict=False)
+        if missing or unexpected or skipped:
+            print(f"  WARNING: architecture changed — training from scratch")
+            if missing:
+                print(f"    Missing keys: {missing}")
+            if unexpected:
+                print(f"    Unexpected keys: {unexpected}")
+            # Don't restore optimizer/scheduler/epoch for incompatible ckpts
+        else:
+            optimizer.load_state_dict(ckpt["optimizer"])
+            scheduler.load_state_dict(ckpt["scheduler"])
+            start_epoch = ckpt["epoch"] + 1
+            if "ema" in ckpt:
+                ema.load_state_dict(ckpt["ema"])
+            print(f"  Resumed at epoch {start_epoch}")
 
     os.makedirs(cfg.checkpoint_dir, exist_ok=True)
 
@@ -185,8 +220,9 @@ def train_uvit(cfg: Config):
         total_loss = 0.0
         pbar = tqdm(train_loader, desc=f"U-ViT Epoch {epoch+1}/{cfg.train_epochs}")
 
-        for step, (images, reports, _labels) in enumerate(pbar):
+        for step, (images, reports, labels, _label_mask) in enumerate(pbar):
             images = images.to(device)
+            labels = labels.to(device)
 
             # Encode images → latent with frozen VAE
             with torch.no_grad():
@@ -196,6 +232,12 @@ def train_uvit(cfg: Config):
             # Encode text with frozen CLIP
             text_emb = encode_text(clip_model, tokenizer, reports, device, cfg.max_text_len)
 
+            # Classifier-free guidance dropout: zero out conditions randomly
+            if cfg.cond_drop_prob > 0:
+                drop_mask = (torch.rand(text_emb.size(0), device=device) < cfg.cond_drop_prob)
+                text_emb[drop_mask] = 0.0
+                labels[drop_mask] = 0.0
+
             # Sample random timesteps
             t = torch.randint(0, cfg.num_timesteps, (z0.shape[0],), device=device)
 
@@ -203,29 +245,34 @@ def train_uvit(cfg: Config):
             noise = torch.randn_like(z0)
             z_t = diffusion.q_sample(z0, t, noise)
 
-            # Predict noise
-            optimizer.zero_grad()
+            # Predict noise (with gradient accumulation)
+            if step % cfg.grad_accum_steps == 0:
+                optimizer.zero_grad()
+
             if cfg.mixed_precision:
                 with torch.amp.autocast("cuda"):
-                    eps_pred = uvit(z_t, t, text_emb)
-                    loss = F.mse_loss(eps_pred, noise)
+                    eps_pred = uvit(z_t, t, text_emb, labels)
+                    loss = F.mse_loss(eps_pred, noise) / cfg.grad_accum_steps
                 scaler.scale(loss).backward()
-                scaler.unscale_(optimizer)
-                nn.utils.clip_grad_norm_(uvit.parameters(), 1.0)
-                scaler.step(optimizer)
-                scaler.update()
+                if (step + 1) % cfg.grad_accum_steps == 0:
+                    scaler.unscale_(optimizer)
+                    nn.utils.clip_grad_norm_(uvit.parameters(), 1.0)
+                    scaler.step(optimizer)
+                    scaler.update()
+                    scheduler.step()
+                    ema.update(uvit)
             else:
-                eps_pred = uvit(z_t, t, text_emb)
-                loss = F.mse_loss(eps_pred, noise)
+                eps_pred = uvit(z_t, t, text_emb, labels)
+                loss = F.mse_loss(eps_pred, noise) / cfg.grad_accum_steps
                 loss.backward()
-                nn.utils.clip_grad_norm_(uvit.parameters(), 1.0)
-                optimizer.step()
+                if (step + 1) % cfg.grad_accum_steps == 0:
+                    nn.utils.clip_grad_norm_(uvit.parameters(), 1.0)
+                    optimizer.step()
+                    scheduler.step()
+                    ema.update(uvit)
 
-            scheduler.step()
-            ema.update(uvit)
-
-            total_loss += loss.item()
-            pbar.set_postfix(loss=f"{loss.item():.4f}",
+            total_loss += loss.item() * cfg.grad_accum_steps
+            pbar.set_postfix(loss=f"{loss.item() * cfg.grad_accum_steps:.4f}",
                             lr=f"{scheduler.get_last_lr()[0]:.2e}")
 
         avg_loss = total_loss / len(train_loader)

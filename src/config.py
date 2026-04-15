@@ -56,10 +56,12 @@ class Config:
     beta_schedule: str = "linear"
 
     # ── Training U-ViT ─────────────────────────────────────────────────
-    train_lr: float = 2e-4
+    train_lr: float = 1e-4
     train_epochs: int = 200
-    train_batch_size: int = 32
-    grad_accum_steps: int = 1
+    train_batch_size: int = 16
+    grad_accum_steps: int = 2  # effective batch = 16*2 = 32
+    cond_drop_prob: float = 0.1  # classifier-free guidance dropout
+    num_labels: int = 14       # CheXpert disease labels
     ema_decay: float = 0.9999
     save_every: int = 10       # save checkpoint every N epochs
     sample_every: int = 10     # generate samples every N epochs
@@ -69,7 +71,7 @@ class Config:
     ddpm_sampling_steps: int = 1000
     ddim_sampling_steps: int = 50
     use_ddim: bool = True
-    guidance_scale: float = 1.0  # classifier-free guidance (1.0 = no guidance)
+    guidance_scale: float = 3.0  # classifier-free guidance (1.0 = no guidance)
 
     # ── Eval ───────────────────────────────────────────────────────────
     fid_num_samples: int = 2461  # test set size from paper
