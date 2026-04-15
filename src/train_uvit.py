@@ -224,10 +224,14 @@ def train_uvit(cfg: Config):
             images = images.to(device)
             labels = labels.to(device)
 
-            # Encode images → latent with frozen VAE
+            # Encode images → latent with frozen VAE (chunked to save VRAM)
             with torch.no_grad():
-                latent_dist = vae.encode(images).latent_dist
-                z0 = latent_dist.sample() * 0.18215  # SD scaling factor
+                vae_chunk = 32
+                z0_parts = []
+                for ci in range(0, images.shape[0], vae_chunk):
+                    chunk = images[ci:ci + vae_chunk]
+                    z0_parts.append(vae.encode(chunk).latent_dist.sample() * 0.18215)
+                z0 = torch.cat(z0_parts, dim=0)
 
             # Encode text with frozen CLIP
             text_emb = encode_text(clip_model, tokenizer, reports, device, cfg.max_text_len)

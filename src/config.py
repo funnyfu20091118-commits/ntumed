@@ -36,7 +36,7 @@ class Config:
     clip_model_name: str = "hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224"
     clip_lr: float = 1e-5
     clip_epochs: int = 10
-    clip_batch_size: int = 64
+    clip_batch_size: int = 96
     clip_warmup_steps: int = 500
 
     # ── VAE ────────────────────────────────────────────────────────────
@@ -58,8 +58,8 @@ class Config:
     # ── Training U-ViT ─────────────────────────────────────────────────
     train_lr: float = 1e-4
     train_epochs: int = 200
-    train_batch_size: int = 16
-    grad_accum_steps: int = 2  # effective batch = 16*2 = 32
+    train_batch_size: int = 128
+    grad_accum_steps: int = 1  # effective batch = 112
     cond_drop_prob: float = 0.1  # classifier-free guidance dropout
     num_labels: int = 14       # CheXpert disease labels
     ema_decay: float = 0.9999
