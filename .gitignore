@@ -6,3 +6,7 @@ __pycache__/
 arXiv-2407.00752v1
 arXiv-2407.00752v1/
 *.pyc
+./src/__pycache__/
+./cache/
+./checkpoints/
+./wandb/

@@ -15,6 +15,10 @@ cd "$(dirname "$0")"
 export PYTHONPATH="$PWD/src:$PYTHONPATH"
 
 STAGE=${1:-all}
+if [[ $# -gt 0 ]]; then
+    shift
+fi
+EXTRA_ARGS=("$@")
 
 # ── Stage 0: Preprocess ───────────────────────────────────────
 if [[ "$STAGE" == "0" || "$STAGE" == "all" ]]; then
@@ -37,7 +41,7 @@ if [[ "$STAGE" == "2" || "$STAGE" == "all" ]]; then
     echo "═══════════════════════════════════════════════════"
     echo "  Stage 2: Train U-ViT Denoising Model"
     echo "═══════════════════════════════════════════════════"
-    python src/train_uvit.py
+    python src/train_uvit.py "${EXTRA_ARGS[@]}"
 fi
 
 # ── Stage 3: Evaluate ─────────────────────────────────────────

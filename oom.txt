@@ -1,0 +1,137 @@
+(cxr-synth) andy@140:~/ntumed$ ./run.sh 2
+═══════════════════════════════════════════════════
+  Stage 2: Train U-ViT Denoising Model
+═══════════════════════════════════════════════════
+/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+wandb: WARNING `start_method` is deprecated and will be removed in a future version of wandb. This setting is currently non-functional and safely ignored.
+wandb: Currently logged in as: andythebreaker to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /home/andy/ntumed/wandb/run-20260524_005838-0q47oe8z
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run stage2-uvit-20260524-005837
+wandb: ⭐️ View project at https://wandb.ai/andythebreaker/chest-diff
+wandb: 🚀 View run at https://wandb.ai/andythebreaker/chest-diff/runs/0q47oe8z
+Loading frozen CLIP text encoder...
+/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/open_clip/factory.py:128: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(checkpoint_path, map_location=map_location)
+/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+Loading fine-tuned CLIP from /home/andy/ntumed/checkpoints/biomedclip_finetuned.pt
+Loading frozen SD VAE...
+Initializing U-ViT...
+U-ViT parameters: 60.57M
+Training samples: 213359
+U-ViT Epoch 1/200:   0%|                                                                                                                                                                                                                                        | 0/1666 [00:43<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/andy/ntumed/src/train_uvit.py", line 350, in <module>
+    train_uvit(cfg)
+  File "/home/andy/ntumed/src/train_uvit.py", line 247, in train_uvit
+    z0_parts.append(vae.encode(chunk).latent_dist.sample() * 0.18215)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/utils/accelerate_utils.py", line 46, in wrapper
+    return method(self, *args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_kl.py", line 271, in encode
+    h = self.encoder(x)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 172, in forward
+    sample = down_block(sample)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/models/unets/unet_2d_blocks.py", line 1474, in forward
+    hidden_states = resnet(hidden_states, temb=None)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/models/resnet.py", line 371, in forward
+    output_tensor = (input_tensor + hidden_states) / self.output_scale_factor
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 23.51 GiB of which 907.69 MiB is free. Process 3138112 has 12.68 GiB memory in use. Including non-PyTorch memory, this process has 7.15 GiB memory in use. Of the allocated memory 5.61 GiB is allocated by PyTorch, and 1.09 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/home/andy/ntumed/src/train_uvit.py", line 350, in <module>
+    train_uvit(cfg)
+  File "/home/andy/ntumed/src/train_uvit.py", line 247, in train_uvit
+    z0_parts.append(vae.encode(chunk).latent_dist.sample() * 0.18215)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/utils/accelerate_utils.py", line 46, in wrapper
+    return method(self, *args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_kl.py", line 271, in encode
+    h = self.encoder(x)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 172, in forward
+    sample = down_block(sample)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/models/unets/unet_2d_blocks.py", line 1474, in forward
+    hidden_states = resnet(hidden_states, temb=None)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/diffusers/models/resnet.py", line 371, in forward
+    output_tensor = (input_tensor + hidden_states) / self.output_scale_factor
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 23.51 GiB of which 907.69 MiB is free. Process 3138112 has 12.68 GiB memory in use. Including non-PyTorch memory, this process has 7.15 GiB memory in use. Of the allocated memory 5.61 GiB is allocated by PyTorch, and 1.09 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+wandb:
+wandb: 🚀 View run stage2-uvit-20260524-005837 at:
+wandb: Find logs at: wandb/run-20260524_005838-0q47oe8z/logs
+(cxr-synth) andy@140:~/ntumed$ nvidia-smi
+Sun May 24 04:34:08 2026
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4090        Off |   00000000:01:00.0  On |                  Off |
+|  0%   49C    P3             62W /  450W |    2675MiB /  24564MiB |     22%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            2627      G   /usr/lib/xorg/Xorg                      890MiB |
+|    0   N/A  N/A            5648      G   ...ibexec/xdg-desktop-portal-kde          7MiB |
+|    0   N/A  N/A            5846      G   /usr/bin/ksmserver                        7MiB |
+|    0   N/A  N/A            5848      G   /usr/bin/kded5                            7MiB |
+|    0   N/A  N/A            5849      G   /usr/bin/kwin_x11                       146MiB |
+|    0   N/A  N/A            5919      G   /usr/bin/plasmashell                     83MiB |
+|    0   N/A  N/A            5955      G   ...it-kde-authentication-agent-1         37MiB |
+|    0   N/A  N/A            6170      G   /usr/bin/kaccess                          7MiB |
+|    0   N/A  N/A            6183      G   ...-gnu/libexec/DiscoverNotifier          7MiB |
+|    0   N/A  N/A            6184      G   /usr/bin/kalendarac                       7MiB |
+|    0   N/A  N/A            6632      G   /usr/bin/plasma-systemmonitor            54MiB |
+|    0   N/A  N/A           12581      G   /opt/google/chrome/chrome                 7MiB |
+|    0   N/A  N/A           12628      G   ...rack-uuid=3190708988185955192         81MiB |
+|    0   N/A  N/A           12795      G   ...asma-browser-integration-host         47MiB |
+|    0   N/A  N/A          430063      G   /usr/bin/konsole                         47MiB |
+|    0   N/A  N/A          473017      G   /usr/bin/kde-print-queue                 47MiB |
+|    0   N/A  N/A          560622      G   /usr/bin/dolphin                         47MiB |
+|    0   N/A  N/A          844578      G   ...278/usr/share/discord/Discord         47MiB |
+|    0   N/A  N/A         1006667      G   /usr/bin/dolphin                          7MiB |
+|    0   N/A  N/A         1006792      G   /usr/bin/okular                           7MiB |
+|    0   N/A  N/A         1044887      G   /usr/bin/okular                           7MiB |
+|    0   N/A  N/A         1049786      G   /usr/bin/okular                          47MiB |
+|    0   N/A  N/A         1091874      G   /usr/share/code/code                     94MiB |
+|    0   N/A  N/A         1132599      G   /usr/bin/spectacle                       20MiB |
+|    0   N/A  N/A         1175911      G   /usr/bin/obs                             70MiB |
+|    0   N/A  N/A         2433403      G   ...linux-gnu/libexec/baloorunner          7MiB |
+|    0   N/A  N/A         2436300      G   /usr/bin/konsole                         47MiB |
+|    0   N/A  N/A         2625452      G   ...bin/snapd-desktop-integration         52MiB |
+|    0   N/A  N/A         3135514      G   /usr/bin/systemsettings                  61MiB |
+|    0   N/A  N/A         3624921      G   ...aconda3/envs/sslml/bin/python         47MiB |
+|    0   N/A  N/A         3724152      G   /usr/bin/krunner                         59MiB |
++-----------------------------------------------------------------------------------------+
+(cxr-synth) andy@140:~/ntumed$
+

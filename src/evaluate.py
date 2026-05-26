@@ -28,6 +28,7 @@ from dataset import MIMICCXRDataset
 from uvit import UViT
 from diffusion import GaussianDiffusion
 from train_uvit import load_clip_text_encoder, encode_text, EMA
+from wandb_utils import init_wandb, log_metrics
 
 
 def set_seed(seed: int):
@@ -36,6 +37,11 @@ def set_seed(seed: int):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
+
+
+def _metric_key(prefix: str, name: str) -> str:
+    safe = name.lower().replace(" ", "_").replace("/", "_")
+    return f"{prefix}/{safe}"
 
 
 # ─── FID computation ───────────────────────────────────────────────────────
@@ -238,7 +244,7 @@ def compute_auroc_scores(all_preds, all_labels, classifier, prefix=""):
     return results
 
 
-def compute_auroc(cfg: Config):
+def compute_auroc(cfg: Config, wandb_run=None):
     """
     Generate CXR for each test sample, classify with torchxrayvision,
     compute AUROC against CheXpert ground truth labels.
@@ -269,6 +275,8 @@ def compute_auroc(cfg: Config):
         test_ds = Subset(test_ds, list(range(num_samples)))
     test_loader = DataLoader(test_ds, batch_size=cfg.eval_batch_size,
                              shuffle=False, num_workers=cfg.num_workers)
+    if wandb_run is not None:
+        log_metrics(wandb_run, {"eval/num_samples": num_samples})
 
     # ── Sanity check: classify REAL images first ──
     print("\n── Sanity check: AUROC on REAL images ──")
@@ -283,7 +291,12 @@ def compute_auroc(cfg: Config):
 
     real_preds = np.concatenate(real_preds, axis=0)
     all_labels_np = np.vstack(all_labels)
-    compute_auroc_scores(real_preds, all_labels_np, classifier, prefix="[REAL] ")
+    real_results = compute_auroc_scores(real_preds, all_labels_np, classifier, prefix="[REAL] ")
+    if wandb_run is not None and real_results:
+        real_avg = float(np.mean(list(real_results.values())))
+        metrics = {_metric_key("auroc_real", k): v for k, v in real_results.items()}
+        metrics["auroc_real/avg"] = real_avg
+        log_metrics(wandb_run, metrics)
 
     # ── Generate synthetic images and classify ──
     print("\n── AUROC on GENERATED images ──")
@@ -302,11 +315,16 @@ def compute_auroc(cfg: Config):
     gen_preds = np.concatenate(gen_preds, axis=0)
     all_labels2_np = np.vstack(all_labels2)
     results = compute_auroc_scores(gen_preds, all_labels2_np, classifier, prefix="[SYNTH] ")
+    if wandb_run is not None and results:
+        synth_avg = float(np.mean(list(results.values())))
+        metrics = {_metric_key("auroc_synth", k): v for k, v in results.items()}
+        metrics["auroc_synth/avg"] = synth_avg
+        log_metrics(wandb_run, metrics)
 
     return results
 
 
-def compute_fid_score(cfg: Config):
+def compute_fid_score(cfg: Config, wandb_run=None):
     """Compute FID between generated and real test images."""
     set_seed(cfg.seed)
     device = torch.device(cfg.device)
@@ -345,6 +363,8 @@ def compute_fid_score(cfg: Config):
 
     fid = compute_fid(real_feats, gen_feats)
     print(f"\nFID Score: {fid:.3f}")
+    if wandb_run is not None:
+        log_metrics(wandb_run, {"fid": fid})
     return fid
 
 
@@ -361,7 +381,11 @@ if __name__ == "__main__":
         cfg.guidance_scale = args.guidance
         print(f"Using guidance_scale = {cfg.guidance_scale}")
 
+    run = init_wandb(cfg, stage="stage3-eval", run_type="eval")
+
     if args.metric in ("fid", "all"):
-        compute_fid_score(cfg)
+        compute_fid_score(cfg, wandb_run=run)
     if args.metric in ("auroc", "all"):
-        compute_auroc(cfg)
+        compute_auroc(cfg, wandb_run=run)
+    if run is not None:
+        run.finish()

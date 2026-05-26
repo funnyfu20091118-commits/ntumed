@@ -15,6 +15,7 @@ import open_clip
 
 from config import Config
 from dataset import CLIPDataset
+from wandb_utils import init_wandb, log_metrics
 
 
 def contrastive_loss(image_features, text_features, logit_scale):
@@ -30,6 +31,7 @@ def contrastive_loss(image_features, text_features, logit_scale):
 
 def train_clip(cfg: Config):
     device = torch.device(cfg.device)
+    run = init_wandb(cfg, stage="stage1-clip", run_type="train")
 
     # Load BiomedCLIP
     print("Loading BiomedCLIP...")
@@ -54,6 +56,10 @@ def train_clip(cfg: Config):
                             shuffle=False, num_workers=cfg.num_workers,
                             pin_memory=True)
 
+    if run is not None:
+        run.summary["train_samples"] = len(train_ds)
+        run.summary["val_samples"] = len(val_ds)
+
     # Optimizer
     optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.clip_lr, weight_decay=0.01)
     total_steps = len(train_loader) * cfg.clip_epochs
@@ -63,6 +69,8 @@ def train_clip(cfg: Config):
 
     best_val_loss = float("inf")
     os.makedirs(cfg.checkpoint_dir, exist_ok=True)
+
+    global_step = 0
 
     for epoch in range(cfg.clip_epochs):
         model.train()
@@ -96,6 +104,19 @@ def train_clip(cfg: Config):
             total_loss += loss.item()
             pbar.set_postfix(loss=f"{loss.item():.4f}")
 
+            global_step += 1
+            if run is not None and global_step % cfg.wandb_log_interval == 0:
+                log_metrics(
+                    run,
+                    {
+                        "train/loss": loss.item(),
+                        "train/lr": scheduler.get_last_lr()[0],
+                        "train/logit_scale": model.logit_scale.exp().item(),
+                        "epoch": epoch + 1,
+                    },
+                    step=global_step,
+                )
+
         avg_train_loss = total_loss / len(train_loader)
 
         # Validation
@@ -114,13 +135,27 @@ def train_clip(cfg: Config):
 
         print(f"  Train loss: {avg_train_loss:.4f}  Val loss: {avg_val_loss:.4f}")
 
+        log_metrics(
+            run,
+            {
+                "train/epoch_loss": avg_train_loss,
+                "val/loss": avg_val_loss,
+                "epoch": epoch + 1,
+            },
+            step=global_step,
+        )
+
         if avg_val_loss < best_val_loss:
             best_val_loss = avg_val_loss
             save_path = os.path.join(cfg.checkpoint_dir, "biomedclip_finetuned.pt")
             torch.save(model.state_dict(), save_path)
             print(f"  Saved best model → {save_path}")
+            if run is not None:
+                run.summary["best_val_loss"] = best_val_loss
 
     print("CLIP fine-tuning complete.")
+    if run is not None:
+        run.finish()
 
 
 if __name__ == "__main__":

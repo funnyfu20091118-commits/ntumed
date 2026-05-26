@@ -14,6 +14,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from config import Config
+from wandb_utils import init_wandb, log_metrics
 
 
 def parse_report(report_path: str) -> str:
@@ -55,6 +56,8 @@ def parse_report(report_path: str) -> str:
 
 def build_manifest(cfg: Config):
     """Build dataset manifest: list of (dicom_id, subject_id, study_id, split, image_path, report_text)."""
+    run = init_wandb(cfg, stage="stage0-preprocess", run_type="preprocess")
+    metrics = {}
     print("Loading metadata...")
     meta_df = pd.read_csv(cfg.metadata_csv)
     split_df = pd.read_csv(cfg.split_csv)
@@ -62,10 +65,12 @@ def build_manifest(cfg: Config):
 
     # Merge metadata with split info
     df = meta_df.merge(split_df[["dicom_id", "split"]], on="dicom_id", how="inner")
+    metrics["rows_after_merge"] = len(df)
 
     # Filter AP / PA views only
     df = df[df["ViewPosition"].isin(["AP", "PA"])].copy()
     print(f"After AP/PA filter: {len(df)} rows")
+    metrics["rows_after_ap_pa"] = len(df)
 
     # Build image paths: files/pXX/pXXXXXXXX/sXXXXXXXX/dicom_id.jpg
     def make_img_path(row):
@@ -97,12 +102,14 @@ def build_manifest(cfg: Config):
     with open(img_list_file) as f:
         existing_images = set(line.strip() for line in f if line.strip())
     print(f"  Found {len(existing_images)} images on disk")
+    metrics["images_found"] = len(existing_images)
 
     # Reports: we know they all exist (extracted from zip), just check study_id mapping
     # Use the study list CSV to know which reports exist
     study_df = pd.read_csv(cfg.study_csv)
     existing_studies = set(zip(study_df["subject_id"], study_df["study_id"]))
     print(f"  Found {len(existing_studies)} study records")
+    metrics["studies_found"] = len(existing_studies)
 
     # Filter: image must exist on disk, report study must exist
     exists_mask = (
@@ -111,6 +118,7 @@ def build_manifest(cfg: Config):
     )
     df = df[exists_mask].copy()
     print(f"After existence check: {len(df)} rows")
+    metrics["rows_after_existence"] = len(df)
 
     # Remove duplicates: keep one image per (subject_id, study_id) — prefer PA over AP
     df["view_priority"] = df["ViewPosition"].map({"PA": 0, "AP": 1})
@@ -119,6 +127,7 @@ def build_manifest(cfg: Config):
     )
     df = df.drop(columns=["view_priority"])
     print(f"After dedup: {len(df)} rows")
+    metrics["rows_after_dedup"] = len(df)
 
     # Parse reports
     print("Parsing reports...")
@@ -133,6 +142,7 @@ def build_manifest(cfg: Config):
     # Drop rows with empty reports
     df = df[df["report_text"].str.len() > 10].copy()
     print(f"After empty report filter: {len(df)} rows")
+    metrics["rows_after_report_filter"] = len(df)
 
     # Merge chexpert labels
     df = df.merge(chexpert_df, on=["subject_id", "study_id"], how="left")
@@ -141,6 +151,7 @@ def build_manifest(cfg: Config):
     for split_name in ["train", "validate", "test"]:
         n = len(df[df["split"] == split_name])
         print(f"  {split_name}: {n}")
+        metrics[f"split_{split_name}"] = n
 
     # Save manifest
     os.makedirs(cfg.cache_dir, exist_ok=True)
@@ -152,6 +163,9 @@ def build_manifest(cfg: Config):
     cols += label_cols
     df[cols].to_csv(manifest_path, index=False)
     print(f"Manifest saved to {manifest_path}")
+    log_metrics(run, metrics)
+    if run is not None:
+        run.finish()
     return df
 
 

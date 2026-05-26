@@ -12,7 +12,7 @@ DATA = os.path.join(ROOT, "mntdata")
 @dataclass
 class Config:
     # ── Paths ──────────────────────────────────────────────────────────
-    image_root: str = os.path.join(DATA, "physionet.org/files/mimic-cxr-jpg/2.1.0/files")
+    image_root: str = "/mnt/data/physolong2/mimic-cxr-jpg-files/files"
     report_root: str = os.path.join(DATA, "rps/reports/files")
     metadata_csv: str = os.path.join(DATA, "physionet.org/files/mimic-cxr-jpg/2.1.0/mimic-cxr-2.0.0-metadata.csv")
     chexpert_csv: str = os.path.join(DATA, "physionet.org/files/mimic-cxr-jpg/2.1.0/mimic-cxr-2.0.0-chexpert.csv")
@@ -58,14 +58,15 @@ class Config:
     # ── Training U-ViT ─────────────────────────────────────────────────
     train_lr: float = 1e-4
     train_epochs: int = 200
-    train_batch_size: int = 128
-    grad_accum_steps: int = 1  # effective batch = 112
+    train_batch_size: int = 32
+    grad_accum_steps: int = 4  # effective batch = 128
+    vae_encode_batch_size: int = 16
     cond_drop_prob: float = 0.1  # classifier-free guidance dropout
     num_labels: int = 14       # CheXpert disease labels
     ema_decay: float = 0.9999
     save_every: int = 10       # save checkpoint every N epochs
     sample_every: int = 10     # generate samples every N epochs
-    num_workers: int = 4
+    num_workers: int = 8
 
     # ── Sampling ───────────────────────────────────────────────────────
     ddpm_sampling_steps: int = 1000
@@ -76,6 +77,13 @@ class Config:
     # ── Eval ───────────────────────────────────────────────────────────
     fid_num_samples: int = 2461  # test set size from paper
     eval_batch_size: int = 16
+
+    # ── W&B logging ───────────────────────────────────────────────
+    wandb_enabled: bool = True
+    wandb_project: str = "chest-diff"
+    wandb_entity: str = ""
+    wandb_auto_name: bool = True
+    wandb_log_interval: int = 1
 
     # ── Device ─────────────────────────────────────────────────────────
     device: str = "cuda"
