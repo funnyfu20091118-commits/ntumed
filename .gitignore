@@ -10,3 +10,6 @@ arXiv-2407.00752v1/
 ./cache/
 ./checkpoints/
 ./wandb/
+wandb/
+checkpoints/
+cache/
