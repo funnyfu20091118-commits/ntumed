@@ -1,0 +1,233 @@
+{
+  "Atelectasis": {
+    "fid": 67.304,
+    "target_mean_score": 0.1259,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.1259,
+      "Consolidation": 0.0668,
+      "Pneumothorax": 0.0008,
+      "Edema": 0.0017,
+      "Pleural Effusion": 0.0443,
+      "Pneumonia": 0.2161,
+      "Cardiomegaly": 0.4905,
+      "Lung Lesion": 0.5079,
+      "Fracture": 0.1798,
+      "Lung Opacity": 0.8475,
+      "Enlarged Cardiomediastinum": 0.4732
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1006
+  },
+  "Consolidation": {
+    "fid": 80.968,
+    "target_mean_score": 0.0804,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.1359,
+      "Consolidation": 0.0804,
+      "Pneumothorax": 0.003,
+      "Edema": 0.0047,
+      "Pleural Effusion": 0.0569,
+      "Pneumonia": 0.2564,
+      "Cardiomegaly": 0.4902,
+      "Lung Lesion": 0.526,
+      "Fracture": 0.1938,
+      "Lung Opacity": 0.86,
+      "Enlarged Cardiomediastinum": 0.4903
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1023
+  },
+  "Pneumothorax": {
+    "fid": 98.954,
+    "target_mean_score": 0.0013,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.1012,
+      "Consolidation": 0.0707,
+      "Pneumothorax": 0.0013,
+      "Edema": 0.0022,
+      "Pleural Effusion": 0.032,
+      "Pneumonia": 0.2403,
+      "Cardiomegaly": 0.4744,
+      "Lung Lesion": 0.5227,
+      "Fracture": 0.1865,
+      "Lung Opacity": 0.8353,
+      "Enlarged Cardiomediastinum": 0.4853
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1053
+  },
+  "Edema": {
+    "fid": 63.844,
+    "target_mean_score": 0.0044,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.1647,
+      "Consolidation": 0.1021,
+      "Pneumothorax": 0.0015,
+      "Edema": 0.0044,
+      "Pleural Effusion": 0.0705,
+      "Pneumonia": 0.2658,
+      "Cardiomegaly": 0.5187,
+      "Lung Lesion": 0.5317,
+      "Fracture": 0.1922,
+      "Lung Opacity": 0.8652,
+      "Enlarged Cardiomediastinum": 0.4951
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.0999
+  },
+  "Pleural Effusion": {
+    "fid": 66.184,
+    "target_mean_score": 0.0559,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.1403,
+      "Consolidation": 0.0773,
+      "Pneumothorax": 0.0008,
+      "Edema": 0.0025,
+      "Pleural Effusion": 0.0559,
+      "Pneumonia": 0.2389,
+      "Cardiomegaly": 0.5028,
+      "Lung Lesion": 0.5329,
+      "Fracture": 0.185,
+      "Lung Opacity": 0.8668,
+      "Enlarged Cardiomediastinum": 0.4945
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1013
+  },
+  "Pneumonia": {
+    "fid": 73.187,
+    "target_mean_score": 0.2237,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.1054,
+      "Consolidation": 0.0617,
+      "Pneumothorax": 0.0008,
+      "Edema": 0.002,
+      "Pleural Effusion": 0.0379,
+      "Pneumonia": 0.2237,
+      "Cardiomegaly": 0.4836,
+      "Lung Lesion": 0.522,
+      "Fracture": 0.182,
+      "Lung Opacity": 0.8328,
+      "Enlarged Cardiomediastinum": 0.4798
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1
+  },
+  "Cardiomegaly": {
+    "fid": 68.03,
+    "target_mean_score": 0.4945,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.1205,
+      "Consolidation": 0.0749,
+      "Pneumothorax": 0.0015,
+      "Edema": 0.0033,
+      "Pleural Effusion": 0.0424,
+      "Pneumonia": 0.2163,
+      "Cardiomegaly": 0.4945,
+      "Lung Lesion": 0.5043,
+      "Fracture": 0.1919,
+      "Lung Opacity": 0.8325,
+      "Enlarged Cardiomediastinum": 0.4781
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1005
+  },
+  "Lung Lesion": {
+    "fid": 86.045,
+    "target_mean_score": 0.5305,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.0957,
+      "Consolidation": 0.0745,
+      "Pneumothorax": 0.0014,
+      "Edema": 0.0023,
+      "Pleural Effusion": 0.0341,
+      "Pneumonia": 0.2238,
+      "Cardiomegaly": 0.4539,
+      "Lung Lesion": 0.5305,
+      "Fracture": 0.1959,
+      "Lung Opacity": 0.8104,
+      "Enlarged Cardiomediastinum": 0.4769
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1004
+  },
+  "Fracture": {
+    "fid": 98.638,
+    "target_mean_score": 0.1926,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.0935,
+      "Consolidation": 0.0602,
+      "Pneumothorax": 0.0019,
+      "Edema": 0.0027,
+      "Pleural Effusion": 0.0301,
+      "Pneumonia": 0.1842,
+      "Cardiomegaly": 0.4502,
+      "Lung Lesion": 0.5014,
+      "Fracture": 0.1926,
+      "Lung Opacity": 0.8041,
+      "Enlarged Cardiomediastinum": 0.4614
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1009
+  },
+  "Lung Opacity": {
+    "fid": 63.359,
+    "target_mean_score": 0.8339,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.1193,
+      "Consolidation": 0.0689,
+      "Pneumothorax": 0.0011,
+      "Edema": 0.0026,
+      "Pleural Effusion": 0.0398,
+      "Pneumonia": 0.2236,
+      "Cardiomegaly": 0.4771,
+      "Lung Lesion": 0.5179,
+      "Fracture": 0.1832,
+      "Lung Opacity": 0.8339,
+      "Enlarged Cardiomediastinum": 0.4743
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1013
+  },
+  "Enlarged Cardiomediastinum": {
+    "fid": 87.412,
+    "target_mean_score": 0.4854,
+    "mean_scores_per_disease": {
+      "Atelectasis": 0.1328,
+      "Consolidation": 0.0768,
+      "Pneumothorax": 0.0017,
+      "Edema": 0.0033,
+      "Pleural Effusion": 0.0443,
+      "Pneumonia": 0.2136,
+      "Cardiomegaly": 0.4934,
+      "Lung Lesion": 0.5214,
+      "Fracture": 0.1985,
+      "Lung Opacity": 0.8325,
+      "Enlarged Cardiomediastinum": 0.4854
+    },
+    "num_generated": 200,
+    "lora_rank": 16,
+    "lora_alpha": 16.0,
+    "best_train_loss": 0.1014
+  }
+}

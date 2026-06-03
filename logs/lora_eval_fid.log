@@ -1,0 +1,319 @@
+/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Loading torchxrayvision classifier...
+Loading VAE...
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Atelectasis
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/atelectasis/samples.png
+  Classifying with TorchXRayVision...
+Warning: Input image does not appear to be normalized correctly. The input image has the range [-1788.00,1775.00] which doesn't seem to be in the [-1024,1024] range. This warning may be wrong though. Only the first image is tested and we are only using a heuristic in an attempt to save a user from using the wrong normalization.
+  Target disease mean score (Atelectasis): 0.1259
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1259 <--
+    Consolidation                      : 0.0668
+    Pneumothorax                       : 0.0008
+    Edema                              : 0.0017
+    Pleural Effusion                   : 0.0443
+    Pneumonia                          : 0.2161
+    Cardiomegaly                       : 0.4905
+    Lung Lesion                        : 0.5079
+    Fracture                           : 0.1798
+    Lung Opacity                       : 0.8475
+    Enlarged Cardiomediastinum         : 0.4732
+  Computing FID...
+  Disease 'Atelectasis': 679 positive training samples.
+  Real features [Atelectasis]:   0%|          | 0/32 [00:00<?, ?it/s]  Real features [Atelectasis]:   3%|▎         | 1/32 [00:00<00:19,  1.61it/s]  Real features [Atelectasis]:  16%|█▌        | 5/32 [00:00<00:04,  5.90it/s]  Real features [Atelectasis]:  28%|██▊       | 9/32 [00:01<00:03,  6.76it/s]  Real features [Atelectasis]:  38%|███▊      | 12/32 [00:01<00:02,  9.37it/s]  Real features [Atelectasis]:  44%|████▍     | 14/32 [00:02<00:02,  7.26it/s]  Real features [Atelectasis]:  50%|█████     | 16/32 [00:02<00:01,  8.60it/s]  Real features [Atelectasis]:  56%|█████▋    | 18/32 [00:02<00:01,  7.04it/s]  Real features [Atelectasis]:  62%|██████▎   | 20/32 [00:02<00:01,  8.37it/s]  Real features [Atelectasis]:  69%|██████▉   | 22/32 [00:03<00:01,  6.97it/s]  Real features [Atelectasis]:  72%|███████▏  | 23/32 [00:03<00:01,  7.16it/s]  Real features [Atelectasis]:  78%|███████▊  | 25/32 [00:03<00:01,  6.33it/s]  Real features [Atelectasis]:  84%|████████▍ | 27/32 [00:03<00:00,  7.51it/s]  Real features [Atelectasis]:  91%|█████████ | 29/32 [00:04<00:00,  6.64it/s]  Real features [Atelectasis]:  97%|█████████▋| 31/32 [00:04<00:00,  7.91it/s]                                                                                Gen features [Atelectasis]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Atelectasis]:  85%|████████▍ | 11/13 [00:00<00:00, 102.68it/s]                                                                                FID (Atelectasis): 67.304
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Consolidation
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/consolidation/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Consolidation): 0.0804
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1359
+    Consolidation                      : 0.0804 <--
+    Pneumothorax                       : 0.0030
+    Edema                              : 0.0047
+    Pleural Effusion                   : 0.0569
+    Pneumonia                          : 0.2564
+    Cardiomegaly                       : 0.4902
+    Lung Lesion                        : 0.5260
+    Fracture                           : 0.1938
+    Lung Opacity                       : 0.8600
+    Enlarged Cardiomediastinum         : 0.4903
+  Computing FID...
+  Disease 'Consolidation': 191 positive training samples.
+  Real features [Consolidation]:   0%|          | 0/12 [00:00<?, ?it/s]  Real features [Consolidation]:   8%|▊         | 1/12 [00:00<00:05,  1.88it/s]  Real features [Consolidation]:  17%|█▋        | 2/12 [00:00<00:03,  3.28it/s]  Real features [Consolidation]:  42%|████▏     | 5/12 [00:01<00:01,  5.50it/s]  Real features [Consolidation]:  50%|█████     | 6/12 [00:01<00:01,  5.96it/s]  Real features [Consolidation]:  75%|███████▌  | 9/12 [00:01<00:00,  6.70it/s]  Real features [Consolidation]:  83%|████████▎ | 10/12 [00:01<00:00,  6.75it/s]                                                                                  Gen features [Consolidation]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Consolidation]:  85%|████████▍ | 11/13 [00:00<00:00, 105.10it/s]                                                                                  FID (Consolidation): 80.968
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Pneumothorax
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/pneumothorax/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Pneumothorax): 0.0013
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1012
+    Consolidation                      : 0.0707
+    Pneumothorax                       : 0.0013 <--
+    Edema                              : 0.0022
+    Pleural Effusion                   : 0.0320
+    Pneumonia                          : 0.2403
+    Cardiomegaly                       : 0.4744
+    Lung Lesion                        : 0.5227
+    Fracture                           : 0.1865
+    Lung Opacity                       : 0.8353
+    Enlarged Cardiomediastinum         : 0.4853
+  Computing FID...
+  Disease 'Pneumothorax': 94 positive training samples.
+  Real features [Pneumothorax]:   0%|          | 0/6 [00:00<?, ?it/s]  Real features [Pneumothorax]:  17%|█▋        | 1/6 [00:00<00:02,  1.87it/s]  Real features [Pneumothorax]:  33%|███▎      | 2/6 [00:00<00:01,  2.88it/s]  Real features [Pneumothorax]:  83%|████████▎ | 5/6 [00:01<00:00,  5.54it/s]  Real features [Pneumothorax]: 100%|██████████| 6/6 [00:01<00:00,  5.94it/s]                                                                               Gen features [Pneumothorax]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Pneumothorax]:  85%|████████▍ | 11/13 [00:00<00:00, 107.82it/s]                                                                                 FID (Pneumothorax): 98.954
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Edema
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/edema/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Edema): 0.0044
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1647
+    Consolidation                      : 0.1021
+    Pneumothorax                       : 0.0015
+    Edema                              : 0.0044 <--
+    Pleural Effusion                   : 0.0705
+    Pneumonia                          : 0.2658
+    Cardiomegaly                       : 0.5187
+    Lung Lesion                        : 0.5317
+    Fracture                           : 0.1922
+    Lung Opacity                       : 0.8652
+    Enlarged Cardiomediastinum         : 0.4951
+  Computing FID...
+  Disease 'Edema': 659 positive training samples.
+  Real features [Edema]:   0%|          | 0/32 [00:00<?, ?it/s]  Real features [Edema]:   3%|▎         | 1/32 [00:00<00:17,  1.75it/s]  Real features [Edema]:  16%|█▌        | 5/32 [00:01<00:05,  5.10it/s]  Real features [Edema]:  28%|██▊       | 9/32 [00:01<00:03,  6.13it/s]  Real features [Edema]:  41%|████      | 13/32 [00:02<00:02,  6.57it/s]  Real features [Edema]:  53%|█████▎    | 17/32 [00:02<00:02,  6.97it/s]  Real features [Edema]:  66%|██████▌   | 21/32 [00:03<00:01,  7.20it/s]  Real features [Edema]:  75%|███████▌  | 24/32 [00:03<00:00,  9.02it/s]  Real features [Edema]:  81%|████████▏ | 26/32 [00:03<00:00,  7.27it/s]  Real features [Edema]:  91%|█████████ | 29/32 [00:04<00:00,  6.92it/s]                                                                          Gen features [Edema]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Edema]:  85%|████████▍ | 11/13 [00:00<00:00, 101.40it/s]                                                                          FID (Edema): 63.844
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Pleural Effusion
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/pleural_effusion/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Pleural Effusion): 0.0559
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1403
+    Consolidation                      : 0.0773
+    Pneumothorax                       : 0.0008
+    Edema                              : 0.0025
+    Pleural Effusion                   : 0.0559 <--
+    Pneumonia                          : 0.2389
+    Cardiomegaly                       : 0.5028
+    Lung Lesion                        : 0.5329
+    Fracture                           : 0.1850
+    Lung Opacity                       : 0.8668
+    Enlarged Cardiomediastinum         : 0.4945
+  Computing FID...
+  Disease 'Pleural Effusion': 990 positive training samples.
+  Real features [Pleural Effusion]:   0%|          | 0/32 [00:00<?, ?it/s]  Real features [Pleural Effusion]:   3%|▎         | 1/32 [00:00<00:16,  1.88it/s]  Real features [Pleural Effusion]:  16%|█▌        | 5/32 [00:00<00:04,  6.01it/s]  Real features [Pleural Effusion]:  28%|██▊       | 9/32 [00:01<00:03,  7.63it/s]  Real features [Pleural Effusion]:  41%|████      | 13/32 [00:01<00:02,  8.50it/s]  Real features [Pleural Effusion]:  50%|█████     | 16/32 [00:01<00:01, 10.46it/s]  Real features [Pleural Effusion]:  56%|█████▋    | 18/32 [00:02<00:01,  8.37it/s]  Real features [Pleural Effusion]:  62%|██████▎   | 20/32 [00:02<00:01,  9.02it/s]  Real features [Pleural Effusion]:  69%|██████▉   | 22/32 [00:02<00:01,  7.51it/s]  Real features [Pleural Effusion]:  75%|███████▌  | 24/32 [00:03<00:00,  8.38it/s]  Real features [Pleural Effusion]:  78%|███████▊  | 25/32 [00:03<00:01,  6.21it/s]  Real features [Pleural Effusion]:  88%|████████▊ | 28/32 [00:03<00:00,  8.24it/s]  Real features [Pleural Effusion]:  94%|█████████▍| 30/32 [00:03<00:00,  7.16it/s]                                                                                     Gen features [Pleural Effusion]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Pleural Effusion]:  85%|████████▍ | 11/13 [00:00<00:00, 109.90it/s]                                                                                     FID (Pleural Effusion): 66.184
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Pneumonia
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/pneumonia/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Pneumonia): 0.2237
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1054
+    Consolidation                      : 0.0617
+    Pneumothorax                       : 0.0008
+    Edema                              : 0.0020
+    Pleural Effusion                   : 0.0379
+    Pneumonia                          : 0.2237 <--
+    Cardiomegaly                       : 0.4836
+    Lung Lesion                        : 0.5220
+    Fracture                           : 0.1820
+    Lung Opacity                       : 0.8328
+    Enlarged Cardiomediastinum         : 0.4798
+  Computing FID...
+  Disease 'Pneumonia': 309 positive training samples.
+  Real features [Pneumonia]:   0%|          | 0/20 [00:00<?, ?it/s]  Real features [Pneumonia]:   5%|▌         | 1/20 [00:00<00:10,  1.77it/s]  Real features [Pneumonia]:  25%|██▌       | 5/20 [00:00<00:02,  6.04it/s]  Real features [Pneumonia]:  40%|████      | 8/20 [00:01<00:01,  8.73it/s]  Real features [Pneumonia]:  50%|█████     | 10/20 [00:01<00:01,  6.78it/s]  Real features [Pneumonia]:  65%|██████▌   | 13/20 [00:02<00:01,  6.71it/s]  Real features [Pneumonia]:  80%|████████  | 16/20 [00:02<00:00,  8.55it/s]  Real features [Pneumonia]:  90%|█████████ | 18/20 [00:02<00:00,  6.99it/s]                                                                              Gen features [Pneumonia]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Pneumonia]:  85%|████████▍ | 11/13 [00:00<00:00, 105.08it/s]                                                                              FID (Pneumonia): 73.187
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Cardiomegaly
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/cardiomegaly/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Cardiomegaly): 0.4945
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1205
+    Consolidation                      : 0.0749
+    Pneumothorax                       : 0.0015
+    Edema                              : 0.0033
+    Pleural Effusion                   : 0.0424
+    Pneumonia                          : 0.2163
+    Cardiomegaly                       : 0.4945 <--
+    Lung Lesion                        : 0.5043
+    Fracture                           : 0.1919
+    Lung Opacity                       : 0.8325
+    Enlarged Cardiomediastinum         : 0.4781
+  Computing FID...
+  Disease 'Cardiomegaly': 808 positive training samples.
+  Real features [Cardiomegaly]:   0%|          | 0/32 [00:00<?, ?it/s]  Real features [Cardiomegaly]:   3%|▎         | 1/32 [00:00<00:17,  1.75it/s]  Real features [Cardiomegaly]:  16%|█▌        | 5/32 [00:00<00:04,  6.25it/s]  Real features [Cardiomegaly]:  28%|██▊       | 9/32 [00:01<00:02,  7.91it/s]  Real features [Cardiomegaly]:  34%|███▍      | 11/32 [00:01<00:02,  8.11it/s]  Real features [Cardiomegaly]:  41%|████      | 13/32 [00:01<00:02,  7.54it/s]  Real features [Cardiomegaly]:  47%|████▋     | 15/32 [00:02<00:02,  7.84it/s]  Real features [Cardiomegaly]:  53%|█████▎    | 17/32 [00:02<00:02,  7.47it/s]  Real features [Cardiomegaly]:  59%|█████▉    | 19/32 [00:02<00:01,  7.22it/s]  Real features [Cardiomegaly]:  66%|██████▌   | 21/32 [00:02<00:01,  7.60it/s]  Real features [Cardiomegaly]:  72%|███████▏  | 23/32 [00:03<00:01,  7.17it/s]  Real features [Cardiomegaly]:  78%|███████▊  | 25/32 [00:03<00:00,  7.86it/s]  Real features [Cardiomegaly]:  84%|████████▍ | 27/32 [00:03<00:00,  7.02it/s]  Real features [Cardiomegaly]:  91%|█████████ | 29/32 [00:03<00:00,  7.85it/s]  Real features [Cardiomegaly]:  97%|█████████▋| 31/32 [00:04<00:00,  6.98it/s]                                                                                 Gen features [Cardiomegaly]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Cardiomegaly]:  85%|████████▍ | 11/13 [00:00<00:00, 109.21it/s]                                                                                 FID (Cardiomegaly): 68.030
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Lung Lesion
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/lung_lesion/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Lung Lesion): 0.5305
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.0957
+    Consolidation                      : 0.0745
+    Pneumothorax                       : 0.0014
+    Edema                              : 0.0023
+    Pleural Effusion                   : 0.0341
+    Pneumonia                          : 0.2238
+    Cardiomegaly                       : 0.4539
+    Lung Lesion                        : 0.5305 <--
+    Fracture                           : 0.1959
+    Lung Opacity                       : 0.8104
+    Enlarged Cardiomediastinum         : 0.4769
+  Computing FID...
+  Disease 'Lung Lesion': 108 positive training samples.
+  Real features [Lung Lesion]:   0%|          | 0/7 [00:00<?, ?it/s]  Real features [Lung Lesion]:  14%|█▍        | 1/7 [00:00<00:03,  1.63it/s]  Real features [Lung Lesion]:  57%|█████▋    | 4/7 [00:00<00:00,  7.00it/s]  Real features [Lung Lesion]:  86%|████████▌ | 6/7 [00:01<00:00,  5.62it/s]                                                                              Gen features [Lung Lesion]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Lung Lesion]:  85%|████████▍ | 11/13 [00:00<00:00, 100.86it/s]                                                                                FID (Lung Lesion): 86.045
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Fracture
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/fracture/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Fracture): 0.1926
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.0935
+    Consolidation                      : 0.0602
+    Pneumothorax                       : 0.0019
+    Edema                              : 0.0027
+    Pleural Effusion                   : 0.0301
+    Pneumonia                          : 0.1842
+    Cardiomegaly                       : 0.4502
+    Lung Lesion                        : 0.5014
+    Fracture                           : 0.1926 <--
+    Lung Opacity                       : 0.8041
+    Enlarged Cardiomediastinum         : 0.4614
+  Computing FID...
+  Disease 'Fracture': 78 positive training samples.
+  Real features [Fracture]:   0%|          | 0/5 [00:00<?, ?it/s]  Real features [Fracture]:  20%|██        | 1/5 [00:00<00:02,  1.73it/s]  Real features [Fracture]:  80%|████████  | 4/5 [00:00<00:00,  6.58it/s]                                                                           Gen features [Fracture]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Fracture]:  92%|█████████▏| 12/13 [00:00<00:00, 113.92it/s]                                                                             FID (Fracture): 98.638
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Lung Opacity
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/lung_opacity/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Lung Opacity): 0.8339
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1193
+    Consolidation                      : 0.0689
+    Pneumothorax                       : 0.0011
+    Edema                              : 0.0026
+    Pleural Effusion                   : 0.0398
+    Pneumonia                          : 0.2236
+    Cardiomegaly                       : 0.4771
+    Lung Lesion                        : 0.5179
+    Fracture                           : 0.1832
+    Lung Opacity                       : 0.8339 <--
+    Enlarged Cardiomediastinum         : 0.4743
+  Computing FID...
+  Disease 'Lung Opacity': 974 positive training samples.
+  Real features [Lung Opacity]:   0%|          | 0/32 [00:00<?, ?it/s]  Real features [Lung Opacity]:   3%|▎         | 1/32 [00:00<00:18,  1.69it/s]  Real features [Lung Opacity]:  16%|█▌        | 5/32 [00:01<00:05,  5.35it/s]  Real features [Lung Opacity]:  28%|██▊       | 9/32 [00:01<00:03,  7.28it/s]  Real features [Lung Opacity]:  41%|████      | 13/32 [00:01<00:02,  8.59it/s]  Real features [Lung Opacity]:  47%|████▋     | 15/32 [00:01<00:01,  9.25it/s]  Real features [Lung Opacity]:  53%|█████▎    | 17/32 [00:02<00:01,  8.00it/s]  Real features [Lung Opacity]:  59%|█████▉    | 19/32 [00:02<00:01,  8.83it/s]  Real features [Lung Opacity]:  66%|██████▌   | 21/32 [00:02<00:01,  7.21it/s]  Real features [Lung Opacity]:  72%|███████▏  | 23/32 [00:03<00:01,  8.21it/s]  Real features [Lung Opacity]:  78%|███████▊  | 25/32 [00:03<00:00,  7.14it/s]  Real features [Lung Opacity]:  84%|████████▍ | 27/32 [00:03<00:00,  8.08it/s]  Real features [Lung Opacity]:  91%|█████████ | 29/32 [00:03<00:00,  6.98it/s]  Real features [Lung Opacity]:  97%|█████████▋| 31/32 [00:04<00:00,  8.47it/s]                                                                                 Gen features [Lung Opacity]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Lung Opacity]:  92%|█████████▏| 12/13 [00:00<00:00, 115.75it/s]                                                                                 FID (Lung Opacity): 63.359
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Enlarged Cardiomediastinum
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/enlarged_cardiomediastinum/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Enlarged Cardiomediastinum): 0.4854
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1328
+    Consolidation                      : 0.0768
+    Pneumothorax                       : 0.0017
+    Edema                              : 0.0033
+    Pleural Effusion                   : 0.0443
+    Pneumonia                          : 0.2136
+    Cardiomegaly                       : 0.4934
+    Lung Lesion                        : 0.5214
+    Fracture                           : 0.1985
+    Lung Opacity                       : 0.8325
+    Enlarged Cardiomediastinum         : 0.4854 <--
+  Computing FID...
+  Disease 'Enlarged Cardiomediastinum': 132 positive training samples.
+  Real features [Enlarged Cardiomediastinum]:   0%|          | 0/9 [00:00<?, ?it/s]  Real features [Enlarged Cardiomediastinum]:  11%|█         | 1/9 [00:00<00:04,  1.88it/s]  Real features [Enlarged Cardiomediastinum]:  22%|██▏       | 2/9 [00:00<00:02,  2.92it/s]  Real features [Enlarged Cardiomediastinum]:  56%|█████▌    | 5/9 [00:01<00:00,  5.66it/s]  Real features [Enlarged Cardiomediastinum]:  67%|██████▋   | 6/9 [00:01<00:00,  5.46it/s]                                                                                             Gen features [Enlarged Cardiomediastinum]:   0%|          | 0/13 [00:00<?, ?it/s]  Gen features [Enlarged Cardiomediastinum]:  85%|████████▍ | 11/13 [00:00<00:00, 104.99it/s]                                                                                               FID (Enlarged Cardiomediastinum): 87.412
+
+================================================================================
+  LoRA Disease-Specific Fine-Tuning Comparison
+================================================================================
+Disease                             Rank  Train Loss       FID  Target Score
+--------------------------------------------------------------------------------
+Atelectasis                           16      0.1006      67.3        0.1259
+Consolidation                         16      0.1023      81.0        0.0804
+Pneumothorax                          16      0.1053      99.0        0.0013
+Edema                                 16      0.0999      63.8        0.0044
+Pleural Effusion                      16      0.1013      66.2        0.0559
+Pneumonia                             16      0.1000      73.2        0.2237
+Cardiomegaly                          16      0.1005      68.0        0.4945
+Lung Lesion                           16      0.1004      86.0        0.5305
+Fracture                              16      0.1009      98.6        0.1926
+Lung Opacity                          16      0.1013      63.4        0.8339
+Enlarged Cardiomediastinum            16      0.1014      87.4        0.4854
+================================================================================
+
+  'Target Score' = mean xrv DenseNet121 predicted probability
+  for the target disease class (higher → model generates that disease).
+
+  Mean prediction score matrix (row = LoRA adapter, col = disease):
+  LoRA \  Disease         Atelecta  Consolid  Pneumoth     Edema  Pleural   Pneumoni  Cardiome  Lung Les  Fracture  Lung Opa  Enlarged
+  ------------------------------------------------------------------------------------------------------------------------------------
+  Atelectasis               0.126*    0.067     0.001     0.002     0.044     0.216     0.490     0.508     0.180     0.848     0.473 
+  Consolidation             0.136     0.080*    0.003     0.005     0.057     0.256     0.490     0.526     0.194     0.860     0.490 
+  Pneumothorax              0.101     0.071     0.001*    0.002     0.032     0.240     0.474     0.523     0.186     0.835     0.485 
+  Edema                     0.165     0.102     0.002     0.004*    0.070     0.266     0.519     0.532     0.192     0.865     0.495 
+  Pleural Effusion          0.140     0.077     0.001     0.003     0.056*    0.239     0.503     0.533     0.185     0.867     0.494 
+  Pneumonia                 0.105     0.062     0.001     0.002     0.038     0.224*    0.484     0.522     0.182     0.833     0.480 
+  Cardiomegaly              0.120     0.075     0.002     0.003     0.042     0.216     0.494*    0.504     0.192     0.833     0.478 
+  Lung Lesion               0.096     0.074     0.001     0.002     0.034     0.224     0.454     0.530*    0.196     0.810     0.477 
+  Fracture                  0.093     0.060     0.002     0.003     0.030     0.184     0.450     0.501     0.193*    0.804     0.461 
+  Lung Opacity              0.119     0.069     0.001     0.003     0.040     0.224     0.477     0.518     0.183     0.834*    0.474 
+  Enlarged Cardiomediast    0.133     0.077     0.002     0.003     0.044     0.214     0.493     0.521     0.199     0.833     0.485*
+
+
+Results saved → /home/andy/ntumed/outputs/lora_comparison.json

@@ -1,0 +1,286 @@
+/home/andy/anaconda3/envs/cxr-synth/lib/python3.10/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Loading torchxrayvision classifier...
+Loading VAE...
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Atelectasis
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/atelectasis/samples.png
+  Classifying with TorchXRayVision...
+Warning: Input image does not appear to be normalized correctly. The input image has the range [-1788.00,1775.00] which doesn't seem to be in the [-1024,1024] range. This warning may be wrong though. Only the first image is tested and we are only using a heuristic in an attempt to save a user from using the wrong normalization.
+  Target disease mean score (Atelectasis): 0.1259
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1259 <--
+    Consolidation                      : 0.0668
+    Pneumothorax                       : 0.0008
+    Edema                              : 0.0017
+    Pleural Effusion                   : 0.0443
+    Pneumonia                          : 0.2161
+    Cardiomegaly                       : 0.4905
+    Lung Lesion                        : 0.5079
+    Fracture                           : 0.1798
+    Lung Opacity                       : 0.8475
+    Enlarged Cardiomediastinum         : 0.4732
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Consolidation
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/consolidation/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Consolidation): 0.0804
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1359
+    Consolidation                      : 0.0804 <--
+    Pneumothorax                       : 0.0030
+    Edema                              : 0.0047
+    Pleural Effusion                   : 0.0569
+    Pneumonia                          : 0.2564
+    Cardiomegaly                       : 0.4902
+    Lung Lesion                        : 0.5260
+    Fracture                           : 0.1938
+    Lung Opacity                       : 0.8600
+    Enlarged Cardiomediastinum         : 0.4903
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Pneumothorax
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/pneumothorax/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Pneumothorax): 0.0013
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1012
+    Consolidation                      : 0.0707
+    Pneumothorax                       : 0.0013 <--
+    Edema                              : 0.0022
+    Pleural Effusion                   : 0.0320
+    Pneumonia                          : 0.2403
+    Cardiomegaly                       : 0.4744
+    Lung Lesion                        : 0.5227
+    Fracture                           : 0.1865
+    Lung Opacity                       : 0.8353
+    Enlarged Cardiomediastinum         : 0.4853
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Edema
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/edema/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Edema): 0.0044
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1647
+    Consolidation                      : 0.1021
+    Pneumothorax                       : 0.0015
+    Edema                              : 0.0044 <--
+    Pleural Effusion                   : 0.0705
+    Pneumonia                          : 0.2658
+    Cardiomegaly                       : 0.5187
+    Lung Lesion                        : 0.5317
+    Fracture                           : 0.1922
+    Lung Opacity                       : 0.8652
+    Enlarged Cardiomediastinum         : 0.4951
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Pleural Effusion
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/pleural_effusion/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Pleural Effusion): 0.0559
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1403
+    Consolidation                      : 0.0773
+    Pneumothorax                       : 0.0008
+    Edema                              : 0.0025
+    Pleural Effusion                   : 0.0559 <--
+    Pneumonia                          : 0.2389
+    Cardiomegaly                       : 0.5028
+    Lung Lesion                        : 0.5329
+    Fracture                           : 0.1850
+    Lung Opacity                       : 0.8668
+    Enlarged Cardiomediastinum         : 0.4945
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Pneumonia
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/pneumonia/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Pneumonia): 0.2237
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1054
+    Consolidation                      : 0.0617
+    Pneumothorax                       : 0.0008
+    Edema                              : 0.0020
+    Pleural Effusion                   : 0.0379
+    Pneumonia                          : 0.2237 <--
+    Cardiomegaly                       : 0.4836
+    Lung Lesion                        : 0.5220
+    Fracture                           : 0.1820
+    Lung Opacity                       : 0.8328
+    Enlarged Cardiomediastinum         : 0.4798
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Cardiomegaly
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/cardiomegaly/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Cardiomegaly): 0.4945
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1205
+    Consolidation                      : 0.0749
+    Pneumothorax                       : 0.0015
+    Edema                              : 0.0033
+    Pleural Effusion                   : 0.0424
+    Pneumonia                          : 0.2163
+    Cardiomegaly                       : 0.4945 <--
+    Lung Lesion                        : 0.5043
+    Fracture                           : 0.1919
+    Lung Opacity                       : 0.8325
+    Enlarged Cardiomediastinum         : 0.4781
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Lung Lesion
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/lung_lesion/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Lung Lesion): 0.5305
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.0957
+    Consolidation                      : 0.0745
+    Pneumothorax                       : 0.0014
+    Edema                              : 0.0023
+    Pleural Effusion                   : 0.0341
+    Pneumonia                          : 0.2238
+    Cardiomegaly                       : 0.4539
+    Lung Lesion                        : 0.5305 <--
+    Fracture                           : 0.1959
+    Lung Opacity                       : 0.8104
+    Enlarged Cardiomediastinum         : 0.4769
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Fracture
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/fracture/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Fracture): 0.1926
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.0935
+    Consolidation                      : 0.0602
+    Pneumothorax                       : 0.0019
+    Edema                              : 0.0027
+    Pleural Effusion                   : 0.0301
+    Pneumonia                          : 0.1842
+    Cardiomegaly                       : 0.4502
+    Lung Lesion                        : 0.5014
+    Fracture                           : 0.1926 <--
+    Lung Opacity                       : 0.8041
+    Enlarged Cardiomediastinum         : 0.4614
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Lung Opacity
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/lung_opacity/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Lung Opacity): 0.8339
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1193
+    Consolidation                      : 0.0689
+    Pneumothorax                       : 0.0011
+    Edema                              : 0.0026
+    Pleural Effusion                   : 0.0398
+    Pneumonia                          : 0.2236
+    Cardiomegaly                       : 0.4771
+    Lung Lesion                        : 0.5179
+    Fracture                           : 0.1832
+    Lung Opacity                       : 0.8339 <--
+    Enlarged Cardiomediastinum         : 0.4743
+
+───────────────────────────────────────────────────────
+  Evaluating LoRA: Enlarged Cardiomediastinum
+───────────────────────────────────────────────────────
+  Loading U-ViT base checkpoint: /home/andy/ntumed/checkpoints/uvit_epoch0100.pt
+  Generating 200 images...
+  Generated shape: torch.Size([200, 3, 256, 256])
+  Sample grid saved → /home/andy/ntumed/outputs/lora_eval/enlarged_cardiomediastinum/samples.png
+  Classifying with TorchXRayVision...
+  Target disease mean score (Enlarged Cardiomediastinum): 0.4854
+  Per-disease mean prediction scores:
+    Atelectasis                        : 0.1328
+    Consolidation                      : 0.0768
+    Pneumothorax                       : 0.0017
+    Edema                              : 0.0033
+    Pleural Effusion                   : 0.0443
+    Pneumonia                          : 0.2136
+    Cardiomegaly                       : 0.4934
+    Lung Lesion                        : 0.5214
+    Fracture                           : 0.1985
+    Lung Opacity                       : 0.8325
+    Enlarged Cardiomediastinum         : 0.4854 <--
+
+================================================================================
+  LoRA Disease-Specific Fine-Tuning Comparison
+================================================================================
+Disease                             Rank  Train Loss       FID  Target Score
+--------------------------------------------------------------------------------
+Atelectasis                           16      0.1006       N/A        0.1259
+Consolidation                         16      0.1023       N/A        0.0804
+Pneumothorax                          16      0.1053       N/A        0.0013
+Edema                                 16      0.0999       N/A        0.0044
+Pleural Effusion                      16      0.1013       N/A        0.0559
+Pneumonia                             16      0.1000       N/A        0.2237
+Cardiomegaly                          16      0.1005       N/A        0.4945
+Lung Lesion                           16      0.1004       N/A        0.5305
+Fracture                              16      0.1009       N/A        0.1926
+Lung Opacity                          16      0.1013       N/A        0.8339
+Enlarged Cardiomediastinum            16      0.1014       N/A        0.4854
+================================================================================
+
+  'Target Score' = mean xrv DenseNet121 predicted probability
+  for the target disease class (higher → model generates that disease).
+
+  Mean prediction score matrix (row = LoRA adapter, col = disease):
+  LoRA \  Disease         Atelecta  Consolid  Pneumoth     Edema  Pleural   Pneumoni  Cardiome  Lung Les  Fracture  Lung Opa  Enlarged
+  ------------------------------------------------------------------------------------------------------------------------------------
+  Atelectasis               0.126*    0.067     0.001     0.002     0.044     0.216     0.490     0.508     0.180     0.848     0.473 
+  Consolidation             0.136     0.080*    0.003     0.005     0.057     0.256     0.490     0.526     0.194     0.860     0.490 
+  Pneumothorax              0.101     0.071     0.001*    0.002     0.032     0.240     0.474     0.523     0.186     0.835     0.485 
+  Edema                     0.165     0.102     0.002     0.004*    0.070     0.266     0.519     0.532     0.192     0.865     0.495 
+  Pleural Effusion          0.140     0.077     0.001     0.003     0.056*    0.239     0.503     0.533     0.185     0.867     0.494 
+  Pneumonia                 0.105     0.062     0.001     0.002     0.038     0.224*    0.484     0.522     0.182     0.833     0.480 
+  Cardiomegaly              0.120     0.075     0.002     0.003     0.042     0.216     0.494*    0.504     0.192     0.833     0.478 
+  Lung Lesion               0.096     0.074     0.001     0.002     0.034     0.224     0.454     0.530*    0.196     0.810     0.477 
+  Fracture                  0.093     0.060     0.002     0.003     0.030     0.184     0.450     0.501     0.193*    0.804     0.461 
+  Lung Opacity              0.119     0.069     0.001     0.003     0.040     0.224     0.477     0.518     0.183     0.834*    0.474 
+  Enlarged Cardiomediast    0.133     0.077     0.002     0.003     0.044     0.214     0.493     0.521     0.199     0.833     0.485*
+
+
+Results saved → /home/andy/ntumed/outputs/lora_comparison.json
