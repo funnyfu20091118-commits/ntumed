@@ -1,0 +1,78 @@
+{
+  "ranking_note": "score = auroc_avg - 0.01*fid when both exist; otherwise auroc_avg (higher better) or -fid (lower fid better)",
+  "top_k": 10,
+  "top": [
+    {
+      "ckpt": "checkpoints/uvit_epoch0100.pt",
+      "fid": 61.07036771533802,
+      "auroc_avg": 0.667328057299745,
+      "score": 0.05662438014636473,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0100.json"
+    },
+    {
+      "ckpt": "checkpoints/uvit_epoch0130.pt",
+      "fid": 60.25207918107351,
+      "auroc_avg": 0.6560099862623192,
+      "score": 0.053489194451584066,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0130.json"
+    },
+    {
+      "ckpt": "checkpoints/uvit_epoch0140.pt",
+      "fid": 60.41087563099083,
+      "auroc_avg": 0.6475323986120738,
+      "score": 0.043423642302165444,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0140.json"
+    },
+    {
+      "ckpt": "checkpoints/uvit_epoch0150.pt",
+      "fid": 60.53065219481863,
+      "auroc_avg": 0.6479477738841988,
+      "score": 0.042641251936012425,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0150.json"
+    },
+    {
+      "ckpt": "checkpoints/uvit_epoch0153.pt",
+      "fid": 60.6864812248477,
+      "auroc_avg": 0.6480925375833959,
+      "score": 0.04122772533491892,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0153.json"
+    }
+  ],
+  "all": [
+    {
+      "ckpt": "checkpoints/uvit_epoch0100.pt",
+      "fid": 61.07036771533802,
+      "auroc_avg": 0.667328057299745,
+      "score": 0.05662438014636473,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0100.json"
+    },
+    {
+      "ckpt": "checkpoints/uvit_epoch0130.pt",
+      "fid": 60.25207918107351,
+      "auroc_avg": 0.6560099862623192,
+      "score": 0.053489194451584066,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0130.json"
+    },
+    {
+      "ckpt": "checkpoints/uvit_epoch0140.pt",
+      "fid": 60.41087563099083,
+      "auroc_avg": 0.6475323986120738,
+      "score": 0.043423642302165444,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0140.json"
+    },
+    {
+      "ckpt": "checkpoints/uvit_epoch0150.pt",
+      "fid": 60.53065219481863,
+      "auroc_avg": 0.6479477738841988,
+      "score": 0.042641251936012425,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0150.json"
+    },
+    {
+      "ckpt": "checkpoints/uvit_epoch0153.pt",
+      "fid": 60.6864812248477,
+      "auroc_avg": 0.6480925375833959,
+      "score": 0.04122772533491892,
+      "json_path": "outputs/ckpt_sweep_refine/uvit_epoch0153.json"
+    }
+  ]
+}

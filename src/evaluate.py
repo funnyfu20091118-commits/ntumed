@@ -7,6 +7,7 @@ AUROC: checks if generated images have correct disease features using
 """
 import os
 import sys
+import json
 import random
 import copy
 import numpy as np
@@ -102,7 +103,7 @@ def extract_features(images_loader, inception, device, desc="Extracting"):
 
 # ─── Shared pipeline loader ────────────────────────────────────────────────
 
-def load_pipeline(cfg, device):
+def load_pipeline(cfg, device, ckpt_path: str | None = None):
     """Load all pipeline components: CLIP, VAE, U-ViT, diffusion."""
     clip_model, tokenizer = load_clip_text_encoder(cfg, device)
     vae = AutoencoderKL.from_pretrained(cfg.vae_model_name).to(device).eval()
@@ -119,8 +120,9 @@ def load_pipeline(cfg, device):
         num_labels=cfg.num_labels,
     ).to(device)
 
-    ckpt = torch.load(os.path.join(cfg.checkpoint_dir, "uvit_latest.pt"),
-                      map_location="cpu", weights_only=True)
+    if ckpt_path is None:
+        ckpt_path = os.path.join(cfg.checkpoint_dir, "uvit_latest.pt")
+    ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=True)
     if "ema" in ckpt:
         uvit.load_state_dict(ckpt["ema"])
     else:
@@ -244,7 +246,7 @@ def compute_auroc_scores(all_preds, all_labels, classifier, prefix=""):
     return results
 
 
-def compute_auroc(cfg: Config, wandb_run=None):
+def compute_auroc(cfg: Config, wandb_run=None, ckpt_path: str | None = None):
     """
     Generate CXR for each test sample, classify with torchxrayvision,
     compute AUROC against CheXpert ground truth labels.
@@ -265,7 +267,7 @@ def compute_auroc(cfg: Config, wandb_run=None):
 
     # Load our pipeline
     print("Loading Chest-Diffusion pipeline...")
-    clip_model, tokenizer, vae, uvit, diffusion = load_pipeline(cfg, device)
+    clip_model, tokenizer, vae, uvit, diffusion = load_pipeline(cfg, device, ckpt_path=ckpt_path)
 
     # Test dataset (subsettable)
     manifest_path = os.path.join(cfg.cache_dir, "manifest.csv")
@@ -324,7 +326,7 @@ def compute_auroc(cfg: Config, wandb_run=None):
     return results
 
 
-def compute_fid_score(cfg: Config, wandb_run=None):
+def compute_fid_score(cfg: Config, wandb_run=None, ckpt_path: str | None = None):
     """Compute FID between generated and real test images."""
     set_seed(cfg.seed)
     device = torch.device(cfg.device)
@@ -333,7 +335,7 @@ def compute_fid_score(cfg: Config, wandb_run=None):
     inception = InceptionV3Features(device)
 
     # Load pipeline
-    clip_model, tokenizer, vae, uvit, diffusion = load_pipeline(cfg, device)
+    clip_model, tokenizer, vae, uvit, diffusion = load_pipeline(cfg, device, ckpt_path=ckpt_path)
 
     # Test dataset (subsettable)
     manifest_path = os.path.join(cfg.cache_dir, "manifest.csv")
@@ -375,17 +377,72 @@ if __name__ == "__main__":
     parser.add_argument("--metric", choices=["fid", "auroc", "all"], default="all")
     parser.add_argument("--guidance", type=float, default=None,
                         help="Override guidance_scale for this run")
+    parser.add_argument("--ckpt", type=str, default=None,
+                        help="Checkpoint path or basename inside checkpoints directory")
+    parser.add_argument("--fid-num-samples", type=int, default=None,
+                        help="Override number of eval test samples")
+    parser.add_argument("--eval-batch-size", type=int, default=None,
+                        help="Override eval batch size")
+    parser.add_argument("--disable-wandb", action="store_true",
+                        help="Disable Weights & Biases logging for this eval run")
+    parser.add_argument("--json-out", type=str, default=None,
+                        help="Optional path to write machine-readable results JSON")
     args = parser.parse_args()
 
     if args.guidance is not None:
         cfg.guidance_scale = args.guidance
         print(f"Using guidance_scale = {cfg.guidance_scale}")
 
+    if args.fid_num_samples is not None:
+        cfg.fid_num_samples = args.fid_num_samples
+        print(f"Using fid_num_samples = {cfg.fid_num_samples}")
+
+    if args.eval_batch_size is not None:
+        cfg.eval_batch_size = args.eval_batch_size
+        print(f"Using eval_batch_size = {cfg.eval_batch_size}")
+
+    if args.disable_wandb:
+        cfg.wandb_enabled = False
+
+    ckpt_path = args.ckpt
+    if ckpt_path is not None and not os.path.isabs(ckpt_path):
+        # Accept either a basename (uvit_epochXXXX.pt) or a relative path
+        # that already includes checkpoints/.
+        if os.path.exists(ckpt_path):
+            ckpt_path = os.path.abspath(ckpt_path)
+        else:
+            ckpt_path = os.path.join(cfg.checkpoint_dir, ckpt_path)
+    if ckpt_path is not None:
+        print(f"Using checkpoint: {ckpt_path}")
+
     run = init_wandb(cfg, stage="stage3-eval", run_type="eval")
+    result_payload = {
+        "metric": args.metric,
+        "ckpt": ckpt_path or os.path.join(cfg.checkpoint_dir, "uvit_latest.pt"),
+        "guidance": cfg.guidance_scale,
+        "fid_num_samples": cfg.fid_num_samples,
+        "eval_batch_size": cfg.eval_batch_size,
+    }
 
     if args.metric in ("fid", "all"):
-        compute_fid_score(cfg, wandb_run=run)
+        fid = compute_fid_score(cfg, wandb_run=run, ckpt_path=ckpt_path)
+        result_payload["fid"] = float(fid)
     if args.metric in ("auroc", "all"):
-        compute_auroc(cfg, wandb_run=run)
+        auroc_map = compute_auroc(cfg, wandb_run=run, ckpt_path=ckpt_path)
+        result_payload["auroc"] = {k: float(v) for k, v in auroc_map.items()}
+        if auroc_map:
+            result_payload["auroc_avg"] = float(np.mean(list(auroc_map.values())))
+
+    if args.json_out:
+        out_dir = os.path.dirname(args.json_out)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+        with open(args.json_out, "w", encoding="utf-8") as f:
+            json.dump(result_payload, f, indent=2)
+        print(f"Saved JSON results to {args.json_out}")
+
+    print("\n=== Evaluation Summary ===")
+    print(json.dumps(result_payload, indent=2))
+
     if run is not None:
         run.finish()

@@ -1,0 +1,20 @@
+{
+  "metric": "all",
+  "ckpt": "/home/andy/ntumed/checkpoints/uvit_epoch0130.pt",
+  "guidance": 3.0,
+  "fid_num_samples": 64,
+  "eval_batch_size": 8,
+  "fid": 104.26957959408338,
+  "auroc": {
+    "Atelectasis": 0.6791979949874688,
+    "Pneumothorax": 0.6507936507936508,
+    "Edema": 0.698989898989899,
+    "Pleural Effusion": 0.8727678571428572,
+    "Pneumonia": 0.6464646464646464,
+    "Cardiomegaly": 0.8537037037037037,
+    "Lung Lesion": 0.5519125683060109,
+    "Fracture": 0.5661016949152543,
+    "Lung Opacity": 0.7486979166666666
+  },
+  "auroc_avg": 0.6965144368855731
+}

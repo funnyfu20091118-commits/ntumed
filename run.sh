@@ -13,6 +13,7 @@ set -e
 
 cd "$(dirname "$0")"
 export PYTHONPATH="$PWD/src:$PYTHONPATH"
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 STAGE=${1:-all}
 if [[ $# -gt 0 ]]; then
@@ -49,7 +50,7 @@ if [[ "$STAGE" == "3" || "$STAGE" == "all" ]]; then
     echo "═══════════════════════════════════════════════════"
     echo "  Stage 3: Evaluation (FID + AUROC)"
     echo "═══════════════════════════════════════════════════"
-    python src/evaluate.py --metric all
+    python src/evaluate.py --metric all "${EXTRA_ARGS[@]}"
 fi
 
 echo ""

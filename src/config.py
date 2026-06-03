@@ -58,13 +58,13 @@ class Config:
     # ── Training U-ViT ─────────────────────────────────────────────────
     train_lr: float = 1e-4
     train_epochs: int = 200
-    train_batch_size: int = 32
-    grad_accum_steps: int = 4  # effective batch = 128
+    train_batch_size: int = 64
+    grad_accum_steps: int = 2  # effective batch = 128
     vae_encode_batch_size: int = 16
     cond_drop_prob: float = 0.1  # classifier-free guidance dropout
     num_labels: int = 14       # CheXpert disease labels
     ema_decay: float = 0.9999
-    save_every: int = 10       # save checkpoint every N epochs
+    save_every: int = 1        # save checkpoint every N epochs
     sample_every: int = 10     # generate samples every N epochs
     num_workers: int = 8
 
